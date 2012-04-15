@@ -15,6 +15,7 @@ URL:		http://taksan.github.com/skype-java-api/
 BuildRequires:	java-commons-lang >= 2.1
 BuildRequires:	java-junit >= 3.8.2
 BuildRequires:	jpackage-utils
+BuildRequires:	maven
 BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.553
 Requires:	jpackage-utils
