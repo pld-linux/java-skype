@@ -7,6 +7,7 @@ Version:	1.0
 Release:	0.1
 License:	CPL v1.0
 Group:		Libraries/Java
+#Source0:	http://sourceforge.jp/frs/redir.php?m=iij&f=%2Fskype%2F21999%2Fskype_1.0.zip
 Source0:	http://iij.dl.sourceforge.jp/skype/21999/skype_%{version}.zip
 # Source0-md5:	16eaa53ec0c977bc49cd2d009cde42bf
 URL:		http://sourceforge.jp/projects/skype/
