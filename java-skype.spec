@@ -14,16 +14,18 @@ Source0:	https://github.com/taksan/skype-java-api/tarball/%{srcname}-%{version}/
 # Source0-md5:	35de3010cb61e6e39544d8732fd0b958
 Patch0:		jni-link.patch
 Patch1:		tests-no-win32.patch
-%{?with_tests:BuildRequires:	maven}
 URL:		http://taksan.github.com/skype-java-api/
 BuildRequires:	dbus-devel
 BuildRequires:	dbus-glib-devel
 BuildRequires:	java-commons-lang >= 2.1
-BuildRequires:	java-junit >= 3.8.2
 BuildRequires:	jpackage-utils
 BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.553
 BuildRequires:	xorg-lib-libX11-devel
+%if %{with tests}
+BuildRequires:	java-junit >= 3.8.2
+BuildRequires:	maven
+%endif
 Requires:	jpackage-utils
 # Not noarch, because we compile only specific platform and arch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
