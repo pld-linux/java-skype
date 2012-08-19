@@ -1,0 +1,73 @@
+--- java-skype-1.4/src-native/src_linux/Makefile.common~	2012-07-09 06:27:23.000000000 +0300
++++ java-skype-1.4/src-native/src_linux/Makefile.common	2012-08-19 16:46:01.540647781 +0300
+@@ -22,12 +22,10 @@
+ 	javah -classpath $(TARGET_CLASSES) com.skype.connector.linux.SkypeFramework
+ 
+ SkypeFramework: com_skype_connector_linux_SkypeFramework.h SkypeFramework.c
+-	$(CC) -c $(CFLAGS) $(INCPATH) -m32 -o $@.o $@.c
+-	$(CC) -c $(CFLAGS) $(INCPATH) -m64 -o $@_x64.o $@.c
++	$(CC) -c $(CFLAGS) $(INCPATH) -o $@.o $@.c
+ 
+ Logging: com_skype_connector_linux_SkypeFramework.h $(LOGGING)
+-	$(CC) -c $(CFLAGS) $(INCPATH) -m32 -o $@.o $(LOGGING)
+-	$(CC) -c $(CFLAGS) $(INCPATH) -m64 -o $@_x64.o $(LOGGING)
++	$(CC) -c $(CFLAGS) $(INCPATH) -o $@.o $(LOGGING)
+ 
+ 
+ clean:
+--- java-skype-1.4/src-native/src_linux/dbus/Makefile	2012-08-19 16:49:10.349304304 +0300
++++ java-skype-1.4/src-native/src_linux/dbus/Makefile	2012-08-19 16:53:40.721849182 +0300
+@@ -35,12 +35,11 @@
+ 
+ $(X86): SkypeFramework Logging SkypeService
+-	$(LINK) $(LD_FLAGS) -m32 -o $(TARGET)/$(X86) $(OBJECTS) $(LIBS_32) 
++	$(LINK) $(LD_FLAGS) -o $(TARGET)/$(X86) $(OBJECTS) $(LIBS_32) 
+ 
+ $(X64): SkypeFramework Logging SkypeService
+ 	$(LINK) $(LD_FLAGS) -m64 -o $(TARGET)/$(X64) $(OBJECTS_X64) $(LIBS)
+ 
+ SkypeService: skype-service.h skype-service-object-glue.h SkypeService.c
+-	$(CC) -c $(CFLAGS) $(INCPATH) -m32 -o $@.o $@.c
+-	$(CC) -c $(CFLAGS) $(INCPATH) -m64 -o $@_x64.o $@.c
++	$(CC) -c $(CFLAGS) $(INCPATH) -o $@.o $@.c
+ 
+ 
+--- java-skype-1.4/src-native/src_linux/x11/Makefile~	2012-07-09 06:27:23.000000000 +0300
++++ java-skype-1.4/src-native/src_linux/x11/Makefile	2012-08-19 16:50:10.025373673 +0300
+@@ -31,7 +31,7 @@
+ all: $(X86) $(X64)
+ 
+ $(X86): SkypeFramework Logging
+-	$(LINK) $(LD_FLAGS) -m32 -o $(TARGET)/$(X86) $(OBJECTS) $(LIBS) 
++	$(LINK) $(LD_FLAGS) -o $(TARGET)/$(X86) $(OBJECTS) $(LIBS) 
+ $(X64): SkypeFramework Logging
+ 	$(LINK) $(LD_FLAGS) -m64 -o $(TARGET)/$(X64) $(OBJECTS_X64) $(LIBS)
+ 
+--- java-skype-1.4/./src/main/java/com/skype/connector/linux/SkypeFramework.java~	2012-07-09 06:27:23.000000000 +0300
++++ java-skype-1.4/./src/main/java/com/skype/connector/linux/SkypeFramework.java	2012-08-19 17:44:51.743314730 +0300
+@@ -51,12 +51,7 @@
+     static void init() throws LoadLibraryException {
+         synchronized(initializedFieldMutex) {
+             if (!initialized) {
+-            	if (SystemUtils.OS_ARCH.contains("64")) {
+-            		ConnectorUtils.loadLibrary(getLibName("x64"));
+-            	}
+-            	else {
+-            		ConnectorUtils.loadLibrary(getLibName("skype_x86"));
+-            	}
++                ConnectorUtils.loadLibrary(getLibName());
+                 setup0();
+                 
+                 eventLoopFinishedLatch = new CountDownLatch(1);
+@@ -73,9 +68,9 @@
+         }
+     }
+ 
+-	private static String getLibName(String arch) {
++	private static String getLibName() {
+ 		String libImpl = System.getProperty(SKYPE_API_LINUX_IMPL_PROPERTY, "dbus");
+-		return "libskype_"+libImpl+"_"+arch+".so";
++		return "skype_"+libImpl;
+ 	}
+     
+     private static native void setup0();

@@ -1,0 +1,41 @@
+--- java-skype-1.4/src/test/java/com/skype/connector/ConnectorUtilsTest.java~	2012-07-09 06:27:23.000000000 +0300
++++ java-skype-1.4/src/test/java/com/skype/connector/ConnectorUtilsTest.java	2012-08-19 17:23:35.890545642 +0300
+@@ -6,37 +6,8 @@
+ 
+ import org.junit.Test;
+ 
+-import com.skype.connector.win32.Win32Connector;
+-
+-public class ConnectorUtilsTest {
+-	@Test
+-	public void getTempDir_ShouldReturnARandomTemporaryDirUnderTempDir()
+-	{
+-		String tempDir = System.getProperty("java.io.tmpdir");
+-		String actual = ConnectorUtils.getSkypeTempDir();
+-		
+-		Assert.assertTrue(actual.contains(tempDir));
+-		Assert.assertFalse(actual.endsWith(tempDir));
+-		File actualDir = new File(actual);
+-		Assert.assertTrue(actualDir.exists());
+-		Assert.assertTrue(actualDir.isDirectory());
+-		
+-		String anotherActual = ConnectorUtils.getSkypeTempDir();
+-		Assert.assertEquals(actual, anotherActual);
+-	}
+-	
+-	@Test
+-	public void getConnectorInstance_ShouldReturnValidConnector() {
++getConnectorInstance_ShouldReturnValidConnector() {
+ 		ensureSkypeDirIsCleanBeforeTestingInitialization();
+-		
+-		if (Connector.getInstance() instanceof Win32Connector) {
+-			class Win32ConnectorToTest extends Win32Connector {
+-				public void runInit() {
+-					initializeImpl();
+-				}
+-			}
+-			new Win32ConnectorToTest().runInit();
+-		}
+ 	}
+ 
+ 	private void ensureSkypeDirIsCleanBeforeTestingInitialization() {
