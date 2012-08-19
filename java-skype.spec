@@ -7,20 +7,20 @@
 Summary:	Skype API for Java, based on Skype4Java library
 Name:		java-skype
 Version:	1.4
-Release:	0.4
+Release:	1
 License:	Apache v2.0, EPL v1.0
 Group:		Libraries/Java
 Source0:	https://github.com/taksan/skype-java-api/tarball/%{srcname}-%{version}/%{srcname}-%{version}.tgz
 # Source0-md5:	35de3010cb61e6e39544d8732fd0b958
 Patch0:		jni-link.patch
 Patch1:		tests-no-win32.patch
+%{?with_tests:BuildRequires:	maven}
 URL:		http://taksan.github.com/skype-java-api/
 BuildRequires:	dbus-devel
 BuildRequires:	dbus-glib-devel
 BuildRequires:	java-commons-lang >= 2.1
 BuildRequires:	java-junit >= 3.8.2
 BuildRequires:	jpackage-utils
-BuildRequires:	maven
 BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.553
 BuildRequires:	xorg-lib-libX11-devel
@@ -58,9 +58,19 @@ find -name src_osx | xargs rm -vr
 
 %build
 export JAVA_HOME="%{java_home}"
+required_jars='commons-lang'
+CLASSPATH=$(build-classpath $required_jars)
+export CLASSPATH
 
-# compile classes
-mvn compile test-compile
+install -d target/{classes,test-classes}
+
+%javac -g -encoding UTF-8 -d target/classes $(find src/main -type f -name "*.java")
+
+%if %{with tests}
+required_jars='junit'
+CLASSPATH=$(build-classpath $required_jars):target/classes
+%javac -g -encoding UTF-8 -d target/test-classes $(find src/test -type f -name "*.java")
+%endif
 
 # native lib needs classes first
 %{__make} -C src-native/src_linux \
@@ -74,9 +84,10 @@ mvn compile test-compile
 	X64='' \
 	%{nil}
 
-# make final jar
-mvn package \
-	-Dmaven.test.skip=true -DskipTests=true
+
+cd target/classes
+%jar cf ../%{srcname}-%{version}.jar $(find -name '*.class')
+cd -
 
 %if %{with tests}
 # note: src/test/java/com/skype/connector/test/TestConnector fails
