@@ -3,7 +3,6 @@
 %bcond_with	tests		# don't build and run tests
 
 %define		srcname		skype-java-api
-%include	/usr/lib/rpm/macros.java
 Summary:	Skype API for Java, based on Skype4Java library
 Name:		java-skype
 Version:	1.4
